@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PS2 no PC - Otimização Premium</title>
+    <link rel="icon" href="logopaiise.png" type="image/jpg">
+    <link rel="apple-touch-icon" href="logopaiise.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandDark: '#050505',
+                        brandGold: '#D4AF37',
+                        brandGoldLight: '#F9E498',
+                        appleGray: '#1d1d1f',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        title: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --gold-glow: rgba(212, 175, 55, 0.4);
+        }
+
+        /* CONFIGURAÇÃO DE SCROLL NATIVA E SEGURA PARA PC */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #050505;
+            color: #f5f5f7;
+            -webkit-font-smoothing: antialiased;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* TRAVA DE BOUNCE EXCLUSIVA PARA CELULARES (Não afeta o PC) */
+        @media (max-width: 768px) {
+            body {
+                overscroll-behavior-y: none;
+            }
+        }
+
+        /* Efeito de Vidro (Glassmorphism) Estilo Apple */
+        .glass-card {
+            background: rgba(29, 29, 31, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Nav Transparente com Desfoque */
+        .glass-nav {
+            background: rgba(5, 5, 5, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Botão Principal com Animação Fluida */
+        .btn-premium {
+            background: linear-gradient(135deg, #D4AF37 0%, #F9E498 100%);
+            color: #000;
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px -5px var(--gold-glow);
+        }
+
+        .btn-premium:hover {
+            transform: scale(1.02) translateY(-2px);
+            box-shadow: 0 15px 30px -5px var(--gold-glow);
+            filter: brightness(1.1);
+        }
+
+        .btn-premium:active {
+            transform: scale(0.98);
+        }
+
+        /* Animações de Entrada */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Container de Vídeo Proporção 16:9 */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 24px;
+            background: #000;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        .video-container iframe, 
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ANIMAÇÃO DE FOGOS DE ARTIFÍCIO NO MODAL */
+        .firework {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #D4AF37 0%, transparent 60%);
+            border-radius: 50%;
+            animation: explode 2s infinite ease-out;
+            opacity: 0;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        @keyframes explode {
+            0% { transform: translateX(-50%) scale(0.1); opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { transform: translateX(-50%) scale(2.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="selection:bg-brandGold selection:text-black">
+
+    <main class="w-full overflow-x-hidden relative">
+
+        <header class="fixed top-0 left-0 w-full z-[100] transition-all duration-300">
+            <div class="w-full bg-black/40 backdrop-blur-md border-b border-brandGold/20 py-1.5 overflow-hidden">
+                <div class="max-w-6xl mx-auto flex justify-center items-center gap-3">
+                    <div class="relative flex items-center justify-center">
+                        <div class="absolute inset-0 bg-brandGold rounded-full blur-[6px] animate-pulse opacity-50"></div>
+                        <i class="fa-solid fa-gift text-brandGoldLight text-xs relative z-10"></i>
+                    </div>
+                    <p class="text-[9px] md:text-[10px] font-black text-white uppercase tracking-[0.2em] italic">
+                        COMPRE AGORA E <span class="text-brandGold">CONCORRA A UM PS2 GOLD</span> CUSTOMIZADO!
+                    </p>
+                </div>
+            </div>
+
+            <nav class="w-full glass-nav py-4 px-6 border-b border-white/5">
+                <div class="max-w-6xl mx-auto flex items-center justify-between relative">
+                    
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-gamepad text-brandGold text-2xl"></i>
+                        <span class="text-xl md:text-2xl font-title font-black text-white tracking-wide">
+                            PAIISE<span class="text-brandGold">.</span>
+                        </span>
+                    </div>
+                    
+                    <div class="hidden lg:block absolute left-1/2 transform -translate-x-1/2">
+                        <span class="text-gray-400 text-[10px] font-bold tracking-[0.3em] uppercase opacity-60">
+                            Nostalgia & Alta Performance
+                        </span>
+                    </div>
+                    
+                    <button onclick="document.getElementById('oferta-secao').scrollIntoView({behavior: 'smooth'})" class="btn-premium px-5 py-2.5 md:px-8 md:py-3 rounded-xl text-xs md:text-sm font-black flex items-center gap-2 cursor-pointer relative z-[110]">
+                        QUERO O PACK <i class="fa-solid fa-bolt text-brandGold animate-pulse"></i>
+                    </button>
+
+                </div>
+            </nav>
+        </header>
+
+        <div class="h-20 md:h-24"></div>
+
+        <header class="relative pt-20 pb-8 px-6 text-center overflow-hidden">
+            <div class="max-w-4xl mx-auto z-10 relative">
+                <span class="inline-block text-brandGold font-semibold tracking-widest uppercase text-xs mb-4 reveal active">
+                    Nostalgia em Alta Performance
+                </span>
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-title font-black leading-tight mb-8 reveal active">
+                    REATIVE SUA INFÂNCIA:<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-brandGold to-brandGoldLight">PS2 NO SEU PC FRACO</span>
+                </h1>
+                
+                <div class="max-w-3xl mx-auto mb-2 reveal active delay-200">
+                    <div class="video-container border border-white/10">
+                        <video controls preload="none" poster="https://segredosdomundo.r7.com/wp-content/uploads/2020/04/melhores-jogos-de-playstation-2-10-classicos-que-ainda-valem-a-pena.jpg">
+                            <source src="CALL OF DUTTY.mp4" type="video/mp4">
+                            Seu navegador não suporta vídeos.
+                        </video>
+                    </div>
+
+                    <div class="mt-8 mb-6">
+                        <a href="#oferta-secao" class="btn-premium inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl text-lg md:text-xl w-full md:w-auto">
+                            <i class="fa-solid fa-download"></i> QUERO RODAR LISO AGORA
+                        </a>
+                        <p class="text-gray-500 text-sm mt-4">
+                            <i class="fa-solid fa-shield-halved text-brandGold mr-2"></i> 
+                            Acesso vitalício e seguro.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[500px] bg-brandGold/5 blur-[120px] -z-10"></div>
+        </header>
+
+        <section class="py-10 md:py-16 bg-white/[0.02] border-y border-white/5">
+            <div class="max-w-5xl mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-title mb-12 reveal active">VEJA RODANDO: CLÁSSICOS INCLUÍDOS</h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                    
+                    <div class="reveal flex flex-col items-center gap-4 group cursor-pointer video-card" data-video-type="youtube" data-video-src="https://www.youtube.com/embed/7NvhLPBGgrY">
+                        <p class="text-brandGold font-bold text-sm md:text-base tracking-wide">GTA SAN ANDREAS</p>
+                        <div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)] group-hover:border-brandGold transition-colors duration-300">
+                            <img src="https://upload.wikimedia.org/wikipedia/pt/d/d3/Grand_Theft_Auto_San_Andreas_capa.png" alt="Capa GTA San Andreas" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="w-14 h-14 md:w-16 md:h-16 bg-brandGold rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.8)] group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-play text-black text-xl md:text-2xl ml-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal flex flex-col items-center gap-4 group cursor-pointer video-card delay-100" data-video-type="youtube" data-video-src="https://www.youtube.com/embed/L_pRez-pP1g">
+                        <p class="text-brandGold font-bold text-sm md:text-base tracking-wide">RESIDENT EVIL 4</p>
+                        <div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)] group-hover:border-brandGold transition-colors duration-300">
+                            <img src="https://i.redd.it/wxg0pordq6ya1.jpg" alt="Capa Resident Evil 4" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="w-14 h-14 md:w-16 md:h-16 bg-brandGold rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.8)] group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-play text-black text-xl md:text-2xl ml-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal flex flex-col items-center gap-4 group cursor-pointer video-card delay-200" data-video-type="youtube" data-video-src="https://www.youtube.com/embed/6ofQLU6VhIg">
+                        <p class="text-brandGold font-bold text-sm md:text-base tracking-wide">GOD OF WAR</p>
+                        <div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)] group-hover:border-brandGold transition-colors duration-300">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDkxMzExYjAtZmQwMC00MmQzLWE1M2QtMGEwY2M1N2I0NDIwXkEyXkFqcGc@._V1_.jpg" alt="Capa God of War" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="w-14 h-14 md:w-16 md:h-16 bg-brandGold rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.8)] group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-play text-black text-xl md:text-2xl ml-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal flex flex-col items-center gap-4 group cursor-pointer video-card delay-300" data-video-type="youtube" data-video-src="https://www.youtube.com/embed/ZH-acPblN_4">
+                        <p class="text-brandGold font-bold text-sm md:text-base tracking-wide">NEED FOR SPEED</p>
+                        <div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)] group-hover:border-brandGold transition-colors duration-300">
+                            <img src="https://cdna.artstation.com/p/assets/images/images/022/113/534/large/agentough-ucover.jpg?1574166961" alt="Capa Need For Speed" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="w-14 h-14 md:w-16 md:h-16 bg-brandGold rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.8)] group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-play text-black text-xl md:text-2xl ml-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 reveal delay-200">
+                    <div class="inline-flex items-center gap-3 px-6 py-3 bg-white/5 rounded-full border border-brandGold/20 backdrop-blur-sm">
+                        <i class="fa-solid fa-arrows-rotate text-brandGold" style="animation: spin 3s linear infinite;"></i>
+                        <p class="text-xs md:text-sm font-bold text-gray-300 tracking-wide uppercase">
+                            SE QUISER, PODE <span class="text-brandGold">TROCAR OS 4 JOGOS</span> APÓS A COMPRA!
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+        <section class="py-12 md:py-16 px-6 relative overflow-hidden bg-brandDark border-b border-white/5">
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brandGold/5 blur-[120px] -z-10"></div>
+            <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white/5 blur-[100px] -z-10"></div>
+            
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <span class="text-brandGold font-black tracking-[0.3em] uppercase text-xs">Engine de Alta Performance</span>
+                    <h2 class="text-3xl md:text-5xl font-title font-black text-white mt-4 italic">CONFORTO DE CONSOLE NEXT-GEN</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    
+                    <div class="glass-card p-8 md:p-12 rounded-[40px] border border-white/5 hover:border-brandGold/30 transition-all duration-500 group reveal shadow-xl">
+                        <div class="flex flex-col gap-6">
+                            <div class="w-16 h-16 bg-brandGold/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                                <i class="fa-solid fa-forward-fast text-3xl text-brandGold animate-pulse"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-white mb-4 uppercase tracking-tight">O Tempo é Seu</h3>
+                                <p class="text-gray-400 leading-relaxed text-lg">
+                                    Cansado de esperar? Você pode definir um <span class="text-white font-bold">botão de atalho para avançar introduções</span>, cutscenes demoradas e telas de loading num piscar de olhos. E muito mais!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-8 md:p-12 rounded-[40px] border border-white/5 hover:border-brandGold/30 transition-all duration-500 group reveal delay-100 shadow-xl">
+                        <div class="flex flex-col gap-6">
+                            <div class="w-16 h-16 bg-brandGold/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                                <i class="fa-solid fa-floppy-disk text-3xl text-brandGold"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-white mb-4 uppercase tracking-tight">Auto Save Integrado</h3>
+                                <p class="text-gray-400 leading-relaxed text-lg">
+                                    O sistema já conta com <span class="text-white font-bold">Auto Save inteligente</span>. Você sai do jogo na hora que precisar e, quando voltar, estará <span class="text-brandGold font-bold">exatamente de onde parou</span>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-12 reveal delay-200 flex justify-center">
+                    <div class="inline-flex items-center gap-6 px-8 py-4 bg-white/5 rounded-full border border-white/10 backdrop-blur-md shadow-lg">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-ping absolute"></span>
+                            <span class="w-2.5 h-2.5 bg-green-500 rounded-full relative"></span>
+                            <span class="text-[10px] md:text-xs font-black text-gray-300 uppercase tracking-widest ml-1">Save Engine Active</span>
+                        </div>
+                        <div class="w-[1px] h-5 bg-white/20"></div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-brandGold text-sm"></i>
+                            <span class="text-[10px] md:text-xs font-black text-gray-300 uppercase tracking-widest">Turbo Mode Ready</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-10 md:py-16 px-6 relative overflow-hidden bg-gradient-to-b from-[#050505] via-[#0a0505] to-[#050505]">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl h-[300px] bg-red-900/10 blur-[100px] -z-10"></div>
+            
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-16 reveal active">
+                    <i class="fa-solid fa-shield-cat text-4xl text-brandGold mb-4"></i>
+                    <h2 class="text-3xl md:text-4xl font-title font-black text-white">
+                        "MAS EU ACHO ISSO DE GRAÇA NA INTERNET..."
+                    </h2>
+                    <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg">
+                        Sim, você acha. Mas você está preparado para pagar o verdadeiro preço do "grátis"?
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                    
+                    <div class="bg-red-950/20 border border-red-900/30 p-8 md:p-10 rounded-[32px] reveal transform transition-transform hover:-translate-y-1 backdrop-blur-sm">
+                        <div class="flex items-center gap-4 mb-6 pb-6 border-b border-red-900/30">
+                            <div class="w-12 h-12 bg-red-900/20 rounded-xl flex items-center justify-center text-red-500">
+                                <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-red-400">A Roleta Russa da Internet</h3>
+                        </div>
+                        <ul class="space-y-5">
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-xmark text-red-500 mt-1"></i>
+                                <span class="text-gray-300"><strong>Risco de Vírus:</strong> Malwares e Cavalos de Troia ocultos que podem roubar seus dados e destruir seu PC.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-xmark text-red-500 mt-1"></i>
+                                <span class="text-gray-300"><strong>Dor de Cabeça:</strong> Horas perdidas caçando tutoriais furados, links quebrados e encurtadores cheios de anúncios.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-xmark text-red-500 mt-1"></i>
+                                <span class="text-gray-300"><strong>Desempenho Ruim:</strong> ISOs corrompidas que rodam a 10 FPS e travam nos momentos mais importantes.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-brandGold/5 border border-brandGold/30 p-8 md:p-10 rounded-[32px] reveal delay-100 transform transition-transform hover:-translate-y-1 shadow-[0_0_30px_rgba(212,175,55,0.05)] backdrop-blur-sm relative overflow-hidden">
+                        <div class="absolute -right-12 top-6 bg-brandGold text-black font-bold text-xs uppercase py-1 px-12 rotate-45">A Escolha Segura</div>
+                        
+                        <div class="flex items-center gap-4 mb-6 pb-6 border-b border-brandGold/20">
+                            <div class="w-12 h-12 bg-brandGold/20 rounded-xl flex items-center justify-center text-brandGold">
+                                <i class="fa-solid fa-lock text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-brandGold">O Método PAIISE Premium</h3>
+                        </div>
+                        <ul class="space-y-5">
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brandGold mt-1"></i>
+                                <span class="text-gray-300"><strong>100% Limpo e Seguro:</strong> Arquivos originais, escaneados e blindados contra qualquer código malicioso.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brandGold mt-1"></i>
+                                <span class="text-gray-300"><strong>Tempo é Dinheiro:</strong> Pré-configurado. O que levaria dias, você resolve em 5 minutos com instalação de 1 clique.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brandGold mt-1"></i>
+                                <span class="text-gray-300"><strong>Otimização Extrema:</strong> Scripts desenvolvidos para extrair o máximo de FPS até mesmo do PC da firma.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="oferta-secao" class="py-12 md:py-20 px-6 relative overflow-hidden bg-[#050505]">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg h-[400px] bg-brandGold/10 blur-[120px] -z-10"></div>
+
+            <div class="max-w-4xl mx-auto text-center">
+                
+                <h2 class="text-3xl md:text-5xl font-title font-black text-white mb-6 reveal">
+                    O SEU PASSAPORTE PARA O PASSADO
+                </h2>
+                <p class="text-brandGold max-w-2xl mx-auto text-lg md:text-xl font-medium mb-12 reveal delay-100 border border-brandGold/20 bg-brandGold/5 p-4 rounded-xl shadow-[0_0_20px_rgba(212,175,55,0.1)]">
+                    Você estará pagando esse valor por <span class="text-white font-bold tracking-wide uppercase">nostalgia organizada</span>, sem danificar seu PC. <br>
+                    <span class="text-brandGold font-bold">O trabalho já foi feito.</span>
+                </p>
+
+                <div class="max-w-md mx-auto glass-card border border-brandGold/40 p-8 md:p-10 rounded-[32px] reveal delay-200 relative overflow-hidden shadow-[0_0_40px_rgba(212,175,55,0.15)] transform hover:-translate-y-2 transition-transform duration-500">
+                    
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-brandGold to-brandGoldLight text-black font-black text-xs uppercase tracking-widest py-1.5 px-8 rounded-b-xl shadow-lg">
+                        Acesso Vitalício
+                    </div>
+
+                    <div class="mt-6 mb-4 text-center">
+                        <h3 class="text-2xl font-bold text-white mb-2">Método PAIISE</h3>
+                        <p class="text-gray-400 text-sm">Otimização Extrema + 4 Clássicos</p>
+                    </div>
+
+                    <div class="text-center mb-2">
+                        <span class="line-through text-red-500 font-bold text-lg">De R$ 57,00</span>
+                        <span class="text-gray-400 text-sm ml-2">por apenas:</span>
+                    </div>
+
+                    <div class="flex justify-center items-start gap-1 mb-4 relative group">
+                        <span class="text-2xl text-brandGold font-bold mt-2">R$</span>
+                        <span class="text-7xl md:text-8xl font-title font-black text-transparent bg-clip-text bg-gradient-to-br from-brandGoldLight via-brandGold to-[#b48600] drop-shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-transform duration-300">
+                            37
+                        </span>
+                        <span class="text-3xl text-brandGold font-bold mt-2">,90</span>
+                    </div>
+                    
+                    <p class="text-center text-xs text-brandGold mb-8 uppercase tracking-widest font-bold">
+                        Menos que um lanche para ter sua infância de volta.
+                    </p>
+
+                    <ul class="text-left space-y-4 mb-10 text-sm text-gray-300 font-medium border-t border-white/10 pt-6">
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-check-circle text-brandGold text-lg"></i> Emulador pré-configurado para PC Fraco
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-check-circle text-brandGold text-lg"></i> GTA, RE4, God of War e Need For Speed
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-check-circle text-brandGold text-lg"></i> Zero risco de vírus ou malwares
+                        </li>
+                    </ul>
+
+                    <button onclick="openUpsellModal()" class="btn-premium flex items-center justify-center gap-3 w-full py-5 rounded-2xl text-lg font-black uppercase tracking-wider shadow-2xl cursor-pointer">
+                        <i class="fa-solid fa-unlock"></i> LIBERAR MEU ACESSO
+                    </button>
+                    
+                    <div class="mt-5 flex justify-center items-center gap-4 text-xs text-gray-500">
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-lock text-brandGold"></i> Compra Segura</span>
+                        <span class="flex items-center gap-1"><i class="fa-brands fa-pix text-teal-400"></i> Liberação Imediata</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 md:py-20 px-6 bg-[#050505] border-t border-white/5">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16 reveal active">
+                    <h2 class="text-3xl md:text-4xl font-title font-black text-white">
+                        AINDA TEM DÚVIDAS?
+                    </h2>
+                    <div class="w-24 h-1 bg-brandGold mx-auto mt-4 rounded"></div>
+                </div>
+
+                <div class="space-y-4 reveal delay-100">
+                    
+                    <div class="faq-item glass-card rounded-2xl overflow-hidden border border-white/5 transition-colors duration-300 hover:border-brandGold/50">
+                        <button class="faq-button w-full flex items-center justify-between p-6 text-left focus:outline-none">
+                            <span class="font-bold text-lg text-white pr-4">Meu PC/Notebook não tem placa de vídeo. Vai rodar?</span>
+                            <i class="fa-solid fa-chevron-down text-brandGold transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-black/50">
+                            <p class="p-6 pt-0 text-gray-400 leading-relaxed">
+                                Sim! Nosso método foi desenvolvido exatamente para isso. Utilizamos scripts de otimização no emulador que repassam o processamento para a CPU, permitindo rodar em computadores comuns e notebooks de escritório com gráficos integrados (como a linha Intel HD Graphics), desde que tenham pelo menos 4GB de RAM.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item glass-card rounded-2xl overflow-hidden border border-white/5 transition-colors duration-300 hover:border-brandGold/50">
+                        <button class="faq-button w-full flex items-center justify-between p-6 text-left focus:outline-none">
+                            <span class="font-bold text-lg text-white pr-4">Funciona em qual Windows? Dá para jogar no Mac?</span>
+                            <i class="fa-solid fa-chevron-down text-brandGold transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-black/50">
+                            <p class="p-6 pt-0 text-gray-400 leading-relaxed">
+                                O nosso sistema foi totalmente otimizado para o ecossistema Windows. Ele roda perfeitamente no <strong>Windows 7, 8, 10 e 11</strong>. No momento, esta configuração específica não tem suporte nativo para Mac OS ou Linux.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item glass-card rounded-2xl overflow-hidden border border-white/5 transition-colors duration-300 hover:border-brandGold/50">
+                        <button class="faq-button w-full flex items-center justify-between p-6 text-left focus:outline-none">
+                            <span class="font-bold text-lg text-white pr-4">É muito difícil de instalar? Preciso saber de programação?</span>
+                            <i class="fa-solid fa-chevron-down text-brandGold transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-black/50">
+                            <p class="p-6 pt-0 text-gray-400 leading-relaxed">
+                                Zero dificuldade. Você não precisa entender de códigos ou de configurações de BIOS. Entregamos um instalador simplificado. É só seguir o passo a passo em tela (avançar e concluir). Em menos de 5 minutos, o ícone estará na sua área de trabalho pronto para abrir o jogo.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item glass-card rounded-2xl overflow-hidden border border-white/5 transition-colors duration-300 hover:border-brandGold/50">
+                        <button class="faq-button w-full flex items-center justify-between p-6 text-left focus:outline-none">
+                            <span class="font-bold text-lg text-white pr-4">Preciso comprar um controle de PS2? E o teclado?</span>
+                            <i class="fa-solid fa-chevron-down text-brandGold transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-black/50">
+                            <p class="p-6 pt-0 text-gray-400 leading-relaxed">
+                                Não. O sistema tem suporte <em>Plug-and-Play</em> (conectar e jogar) para controles genéricos USB, além de controles originais de PS4 e Xbox. Se você não tem controle nenhum, não tem problema: ele já vem configurado de fábrica para você jogar direto no teclado do seu computador.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item glass-card rounded-2xl overflow-hidden border border-white/5 transition-colors duration-300 hover:border-brandGold/50">
+                        <button class="faq-button w-full flex items-center justify-between p-6 text-left focus:outline-none">
+                            <span class="font-bold text-lg text-white pr-4">O acesso aos arquivos expira? Terei que pagar mensalidade?</span>
+                            <i class="fa-solid fa-chevron-down text-brandGold transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-black/50">
+                            <p class="p-6 pt-0 text-gray-400 leading-relaxed">
+                                O acesso é 100% vitalício. Você paga apenas uma vez e os arquivos são seus para sempre, sem nenhuma mensalidade, taxa oculta ou validade para baixar.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="relative py-16 md:py-24 px-6 flex flex-col items-center justify-center text-center border-t border-white/5 overflow-hidden group">
+            
+            <img src="https://p2.trrsf.com/image/fget/cf/940/0/images.terra.com/2022/08/02/hbos-last-of-us-show-casts-game-of-thrones-star-as-ellie_f4km-1h7fx7u8r6aer.jpeg" 
+                 alt="Fundo PS3" 
+                 class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-50 transition-opacity duration-700 z-0 scale-105 group-hover:scale-100">
+
+            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/70 to-[#050505] z-0"></div>
+
+            <div class="max-w-4xl mx-auto w-full relative z-10 flex flex-col items-center">
+                
+                <p class="text-gray-400 text-sm md:text-base font-black tracking-[0.2em] uppercase mb-2 reveal">
+                    Seu PC é mais potente?
+                </p>
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-title font-black text-white mb-12 reveal drop-shadow-2xl">
+                    ELEVE O NÍVEL PARA O <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-300 via-white to-gray-400 drop-shadow-lg">PLAYSTATION 3</span>
+                </h2>
+
+                <div class="relative group/btn cursor-pointer w-full max-w-md mx-auto reveal delay-200">
+                    
+                    <div class="absolute -inset-1 bg-gradient-to-r from-gray-500 via-gray-100 to-gray-500 rounded-3xl blur opacity-40 group-hover/btn:opacity-100 transition duration-500 group-hover/btn:duration-200 animate-pulse"></div>
+                    
+                    <a href="https://wa.me/5511916072188?text=Olá!%20Tenho%20um%20PC%20com%20placa%20de%20vídeo%20e%20tenho%20interesse%20no%20%20Premium%20de%20PS3%20e%20PS4." 
+                       class="relative flex flex-col items-center justify-center px-6 py-6 md:py-8 bg-black/80 backdrop-blur-md rounded-3xl border border-white/20 transition-transform duration-300 group-hover/btn:-translate-y-1 w-full shadow-2xl" target="_blank"
+                       onclick="dispararAutomacao('interesse_ps3')">
+                        
+                        <h3 class="text-white font-black text-xl md:text-2xl tracking-widest uppercase mb-2 text-shadow-sm">
+                            ACESSAR O PACK PS3
+                        </h3>
+                        
+                        <p class="text-gray-400 text-xs md:text-sm font-medium border-t border-white/10 pt-3 w-4/5 mx-auto mt-2">
+                            Exclusivo para PCs com <strong class="text-white">Placa de Vídeo Dedicada</strong>
+                        </p>
+                        
+                    </a>
+                </div>
+                
+            </div>
+        </section>
+
+        <footer class="py-12 px-6 text-center bg-brandDark border-t border-white/10">
+            <div class="max-w-xl mx-auto">
+                <div class="mt-4 opacity-40 text-sm">
+                    <p>&copy; 2026 - PAIISE - Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </footer>
+
+    </main> <div id="videoModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/90 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="relative w-full max-w-4xl p-6">
+            <button id="closeModalBtn" class="absolute -top-6 right-6 md:-top-10 md:right-0 text-white hover:text-brandGold text-4xl transition-colors z-10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalPlayerContainer" class="video-container border border-brandGold rounded-2xl shadow-[0_0_40px_rgba(212,175,55,0.3)] bg-black">
+                </div>
+        </div>
+    </div>
+
+    <div id="upsellModal" class="fixed inset-0 z-[200] hidden flex items-center justify-center bg-black/95 backdrop-blur-md opacity-0 transition-opacity duration-300 overflow-y-auto">
+        
+        <div class="fireworks-container fixed inset-0 pointer-events-none overflow-hidden flex justify-center items-center">
+            <div class="firework"></div>
+            <div class="firework" style="animation-delay: 0.5s; left: 20%; top: 30%;"></div>
+            <div class="firework" style="animation-delay: 1.2s; left: 80%; top: 20%;"></div>
+        </div>
+
+        <div class="relative w-full max-w-lg p-6 mx-4 my-8">
+            <button onclick="closeUpsellModal()" class="absolute -top-2 right-1 text-white hover:text-red-500 text-3xl transition-colors z-10 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="glass-card border-2 border-brandGold rounded-3xl p-6 md:p-8 text-center shadow-[0_0_60px_rgba(212,175,55,0.4)] relative overflow-hidden mt-6">
+                
+                <h2 class="text-3xl md:text-4xl font-title font-black text-transparent bg-clip-text bg-gradient-to-r from-brandGoldLight to-brandGold mb-2 animate-bounce">
+                    🎉 PARABÉNS!
+                </h2>
+                
+                <p class="text-white font-black mb-6 text-xl md:text-2xl uppercase tracking-wide">
+                    VOCÊ RECEBEU UM <span class="text-green-400">DESCONTO DE 10R$</span>
+                </p>
+
+                <div class="flex justify-center gap-4 mb-6">
+                    <div class="bg-black/50 border border-white/10 p-3 rounded-xl w-1/2 flex flex-col justify-center">
+                        <span class="block text-gray-400 text-xs md:text-sm font-bold uppercase mb-1">SÓ O PS2:</span>
+                        <span class="block text-xl font-bold text-white">R$ 27,90</span>
+                    </div>
+                    
+                    <div class="bg-brandGold/10 border border-brandGold/40 p-3 rounded-xl w-1/2 relative flex flex-col justify-center">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-black text-[10px] font-black uppercase px-3 py-1 rounded-full whitespace-nowrap shadow-lg">QUERO MAIS JOGOS</div>
+                        <span class="block text-brandGold text-xs md:text-sm font-bold uppercase mb-1">PS2 + 4 JOGOS:</span>
+                        <span class="block text-2xl font-black text-brandGold drop-shadow-md">R$ 37,90</span>
+                    </div>
+                </div>
+
+                <div class="w-full aspect-video rounded-xl overflow-hidden border border-white/20 shadow-xl mb-6">
+                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Pack de Jogos com Desconto" class="w-full h-full object-cover">
+                </div>
+
+                <div class="space-y-4 flex flex-col items-center">
+                    
+                    <a href="https://wa.me/5511916072188?text=Ol%C3%A1%21%20Quero%20levar%20com%20os%20outros%20jogos." 
+                       class="btn-premium w-full flex flex-row items-center justify-center gap-3 py-4 px-3 rounded-xl shadow-[0_0_20px_rgba(212,175,55,0.6)] animate-pulse" target="_blank"
+                       onclick="dispararAutomacao('compra_ps2_completo')">
+                        <i class="fa-solid fa-cart-plus text-xl shrink-0"></i> 
+                        <span class="font-black text-[12px] sm:text-sm md:text-base uppercase tracking-tight text-center leading-none">QUERO LEVAR COM OS OUTROS JOGOS</span>
+                    </a>
+
+                    <a href="https://wa.me/5511916072188?text=Ol%C3%A1%21%20Quero%20comprar%20s%C3%A1%20o%20PS2%20mesmo." 
+                       class="w-full py-3 rounded-xl border border-white/20 text-gray-300 text-xs md:text-sm font-bold hover:bg-white/5 hover:text-white transition-colors uppercase" target="_blank"
+                       onclick="dispararAutomacao('compra_ps2_basico')">
+                        QUERO COMPRAR SÓ O PS2 MESMO
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // WEBHOOKS: COLE SUAS URLs AQUI 
+        const WEBHOOK_N8N = "SUA_URL_DO_N8N_AQUI"; 
+        const WEBHOOK_APP_SCRIPT = "SUA_URL_DO_GOOGLE_APP_SCRIPT_AQUI";
+
+        // Função universal para envio de dados
+        async function dispararAutomacao(tipoEvento) {
+            const payload = {
+                evento: tipoEvento,
+                data_hora: new Date().toISOString(),
+                pagina: document.title
+            };
+
+            const requests = [];
+
+            if (WEBHOOK_N8N !== "SUA_URL_DO_N8N_AQUI") {
+                requests.push(
+                    fetch(WEBHOOK_N8N, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    }).catch(err => console.error("Erro n8n:", err))
+                );
+            }
+
+            if (WEBHOOK_APP_SCRIPT !== "SUA_URL_DO_GOOGLE_APP_SCRIPT_AQUI") {
+                requests.push(
+                    fetch(WEBHOOK_APP_SCRIPT, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    }).catch(err => console.error("Erro App Script:", err))
+                );
+            }
+
+            await Promise.all(requests);
+        }
+
+        // ==========================================
+        // BLINDAGEM DE CÓDIGO (BLOQUEIA F12 E INSPECIONAR)
+        // ==========================================
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // Bloqueia o clique direito
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Bloqueia F12
+            if(e.key === 'F12' || e.keyCode === 123) {
+                e.preventDefault();
+            }
+            // Bloqueia Ctrl+Shift+I ou J (Inspecionar/Console)
+            if(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.keyCode === 73 || e.keyCode === 74)) {
+                e.preventDefault();
+            }
+            // Bloqueia Ctrl+U (Ver código-fonte)
+            if(e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) {
+                e.preventDefault();
+            }
+        });
+
+
+        // Animação de Scroll Reveal
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Links externos
+        document.querySelectorAll('a[href^="http"]').forEach(link => {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+        });
+
+        // ==========================================
+        // LÓGICA DO POP-UP (MODAL) DE VÍDEOS DOS JOGOS
+        // ==========================================
+        const modal = document.getElementById('videoModal');
+        const playerContainer = document.getElementById('modalPlayerContainer');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const videoCards = document.querySelectorAll('.video-card');
+
+        function openModal(type, src) {
+            playerContainer.innerHTML = '';
+            if (type === 'youtube') {
+                playerContainer.innerHTML = `<iframe src="${src}?autoplay=1" allow="autoplay; fullscreen" allowfullscreen class="w-full h-full absolute top-0 left-0 border-none rounded-2xl"></iframe>`;
+            } else if (type === 'local') {
+                playerContainer.innerHTML = `<video controls autoplay class="w-full h-full absolute top-0 left-0 object-cover rounded-2xl"><source src="${src}" type="video/mp4"></video>`;
+            }
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                playerContainer.innerHTML = ''; 
+            }, 300);
+        }
+
+        videoCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const type = card.getAttribute('data-video-type');
+                const src = card.getAttribute('data-video-src');
+                if(src && src !== 'https://www.youtube.com/embed/SEU_ID_AQUI') {
+                    openModal(type, src);
+                } else {
+                    alert("Por favor, substitua 'SEU_ID_AQUI' pelo link real do seu vídeo no código fonte.");
+                }
+            });
+        });
+
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // ==========================================
+        // LÓGICA DO POP-UP DE UPSELL / WHATSAPP
+        // ==========================================
+        const upsellModal = document.getElementById('upsellModal');
+
+        function openUpsellModal() {
+            upsellModal.classList.remove('hidden');
+            setTimeout(() => {
+                upsellModal.classList.remove('opacity-0');
+                upsellModal.classList.add('opacity-100');
+            }, 10);
+        }
+
+        function closeUpsellModal() {
+            upsellModal.classList.remove('opacity-100');
+            upsellModal.classList.add('opacity-0');
+            setTimeout(() => {
+                upsellModal.classList.add('hidden');
+            }, 300);
+        }
+
+        // ==========================================
+        // LÓGICA DO ACORDEÃO (FAQ)
+        // ==========================================
+        const faqButtons = document.querySelectorAll('.faq-button');
+
+        faqButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                const isOpen = answer.style.maxHeight;
+
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.style.maxHeight = null;
+                    ans.classList.remove('py-4');
+                });
+                document.querySelectorAll('.faq-button i').forEach(ic => {
+                    ic.style.transform = 'rotate(0deg)';
+                });
+
+                if (!isOpen) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
